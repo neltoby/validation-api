@@ -1,0 +1,8 @@
+const http = require('http')
+const app = require('../app')
+
+// sets port for app
+const port = app.get('port')
+
+// starts server
+http.createServer(app).listen(port, () => console.log('Server running at '+ port))

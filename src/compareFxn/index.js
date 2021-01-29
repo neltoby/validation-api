@@ -5,6 +5,10 @@
  * @param {string} item2 - item to compare.Can be string or number
  */
 module.exports = function compareItems (item1, condition, item2, ) {
+    if(typeof item1 === 'string') item1 = item1.normalize()
+
+    if(typeof item2 === 'string') item2 = item2.normalize()
+    
     if(condition === 'eq' || condition === '==='){
         if(item1 === item2)
             return true

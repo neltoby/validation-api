@@ -21,7 +21,7 @@ module.exports = function makeValidation ({arrayCheck, objCheck, compareItems}) 
             constructor(payload) {
                 let newPayload 
                 try{
-                    newPayload = JSON.parse(payload)
+                    newPayload = eval(payload)
                 }catch (e){
                     throw {
                         message: {
@@ -44,20 +44,22 @@ module.exports = function makeValidation ({arrayCheck, objCheck, compareItems}) 
                         statusCode
                     }
                 }
-                if(!data) {
+
+                if(rule.constructor !== Object) {
                     throw {
                         message: {
-                            message: "data is required.",
+                            message: "rule should be an object.",
                             status: "error",
                             data: null
                         },
                         statusCode
                     }
                 }
-                if(rule.constructor !== Object) {
+                
+                if(!data) {
                     throw {
                         message: {
-                            message: "rule should be an object.",
+                            message: "data is required.",
                             status: "error",
                             data: null
                         },
@@ -141,11 +143,39 @@ module.exports = function makeValidation ({arrayCheck, objCheck, compareItems}) 
                 this.rule = rule;
                 this.data = data;
                 this.validatedValue = null;
+                this.message = null;
+                this.status = null;
+                this.retData = null;
             }
 
             get getDataType() {
                 return this.dataType
             }
+
+            get getMessage() {
+                return this.message
+            }
+
+            get getStatus() {
+                return this.status
+            }
+
+            get getRetData() {
+                return this.retData
+            }
+
+            #setMessage(message){
+                this.message = message
+            }
+
+            #setStatus(status){
+                this.status = status
+            }
+
+            #setRetData(data){
+                this.retData = data
+            }
+
             checkValidation() {
                 if(this.dataType === 'object'){
                     return this.#objectValidation()
@@ -169,6 +199,7 @@ module.exports = function makeValidation ({arrayCheck, objCheck, compareItems}) 
                             statusCode
                         }
                     }
+
                     const retVal = {
                         message: null,
                         status: null,
@@ -176,28 +207,36 @@ module.exports = function makeValidation ({arrayCheck, objCheck, compareItems}) 
                             validation: {
                                 error: null,
                                 field: this.rule.field,
-                                field_value: this.data[field],
+                                field_value: this.data.charAt(field),
                                 condition: this.rule.condition,
                                 condition_value: this.rule.condition_value
                             }
                         }
                     }
                     if(this.rule.condition !== 'contains'){
-                        if(eval(`${this.data.charAt(field)} ${condition[this.rule.condition]} ${this.rule.condition_value}`)){
-                            retVal["message"] = `field ${this.rule.field} successfully validated.`;
-                            retVal["status"] = "success";
+                        if(compareItems(this.data.charAt(field), condition[this.rule.condition], this.rule.condition_value)){
                             retVal["data"]["validation"]["error"] = false; 
+                            this.#setMessage(`field ${this.rule.field} successfully validated.`)
+                            this.#setStatus('success')
+                            this.#setRetData(retVal["data"])
                         }else{
                             retVal["message"] = `field ${this.rule.field} failed validation.`;
                             retVal["status"] = "error";
                             retVal["data"]["validation"]["error"] = true;
+                            throw {
+                                message: retVal,
+                                statusCode
+                            }
                         }
                     }else{
                         retVal["message"] = `field ${this.rule.field} failed validation.`;
                         retVal["status"] = "error";
                         retVal["data"]["validation"]["error"] = true;
+                        throw {
+                            message: retVal,
+                            statusCode
+                        }
                     }
-                    return retVal
                 }else{
                     throw {
                         message:{
@@ -240,30 +279,44 @@ module.exports = function makeValidation ({arrayCheck, objCheck, compareItems}) 
                             if(this.rule.condition !== 'contains'){
                                 if(this.rule.condition === 'eq' || this.rule.condition === 'neq'){         
                                     if(compareItems(this.data[field], condition[this.rule.condition], this.rule.condition_value)){
-                                        retVal["message"] = `field ${this.rule.field} successfully validated.`;
-                                        retVal["status"] = "success";
                                         retVal["data"]["validation"]["error"] = false; 
+                                        this.#setMessage(`field ${this.rule.field} successfully validated.`)
+                                        this.#setStatus('success')
+                                        this.#setRetData(retVal["data"])
                                     }else{
                                         retVal["message"] = `field ${this.rule.field} failed validation.`;
                                         retVal["status"] = "error";
                                         retVal["data"]["validation"]["error"] = true;
+                                        throw {
+                                            message: retVal,
+                                            statusCode
+                                        }
                                     }
                                 }else {
                                     if((typeof this.data[field] === 'string' && typeof this.rule.condition_value === 'string') 
                                     || typeof this.data[field] === 'number' && typeof this.rule.condition_value === 'number'){
                                         if(compareItems(this.data[field], condition[this.rule.condition], this.rule.condition_value)){
-                                            retVal["message"] = `field ${this.rule.field} successfully validated.`;
-                                            retVal["status"] = "success";
                                             retVal["data"]["validation"]["error"] = false; 
+                                            this.#setMessage(`field ${this.rule.field} successfully validated.`)
+                                            this.#setStatus('success')
+                                            this.#setRetData(retVal["data"])
                                         }else{
                                             retVal["message"] = `field ${this.rule.field} failed validation.`;
                                             retVal["status"] = "error";
                                             retVal["data"]["validation"]["error"] = true;
+                                            throw {
+                                                message: retVal,
+                                                statusCode
+                                            }
                                         }
                                     }else{
                                         retVal["message"] = `field ${this.rule.field} failed validation.`;
                                         retVal["status"] = "error";
                                         retVal["data"]["validation"]["error"] = true;
+                                        throw {
+                                            message: retVal,
+                                            statusCode
+                                        }
                                     }
                                 }
                             }else{
@@ -272,13 +325,18 @@ module.exports = function makeValidation ({arrayCheck, objCheck, compareItems}) 
                                     dat_field_value = this.data[field].toString()
                                 }
                                 if(dat_field_value.includes(this.rule.condition_value)){
-                                    retVal["message"] = `field ${this.rule.field} successfully validated.`;
-                                    retVal["status"] = "success";
                                     retVal["data"]["validation"]["error"] = false; 
+                                    this.#setMessage(`field ${this.rule.field} successfully validated.`)
+                                    this.#setStatus('success')
+                                    this.#setRetData(retVal["data"])
                                 }else{
                                     retVal["message"] = `field ${this.rule.field} failed validation.`;
                                     retVal["status"] = "error";
                                     retVal["data"]["validation"]["error"] = true;
+                                    throw {
+                                        message: retVal,
+                                        statusCode
+                                    }
                                 }
                             }
                         }else{
@@ -286,18 +344,27 @@ module.exports = function makeValidation ({arrayCheck, objCheck, compareItems}) 
                                 if(this.rule.condition === 'contains'){
                                     if(typeof this.rule.condition_value === 'string'){
                                         if(objCheck(this.data[field], this.rule.condition_value)){
-                                            retVal["message"] = `field ${this.rule.field} successfully validated.`;
-                                            retVal["status"] = "success";
                                             retVal["data"]["validation"]["error"] = false; 
+                                            this.#setMessage(`field ${this.rule.field} successfully validated.`)
+                                            this.#setStatus('success')
+                                            this.#setRetData(retVal["data"])
                                         }else{
                                             retVal["message"] = `field ${this.rule.field} failed validation.`;
                                             retVal["status"] = "error";
                                             retVal["data"]["validation"]["error"] = true;
+                                            throw {
+                                                message: retVal,
+                                                statusCode
+                                            }
                                         }
                                     }else{
                                         retVal["message"] = `field ${this.rule.field} failed validation.`;
-                                            retVal["status"] = "error";
-                                            retVal["data"]["validation"]["error"] = true;
+                                        retVal["status"] = "error";
+                                        retVal["data"]["validation"]["error"] = true;
+                                        throw {
+                                            message: retVal,
+                                            statusCode
+                                        }
                                     }
                                 }else{
                                     if(this.rule.condition === 'eq' || this.rule.condition === 'neq'){
@@ -306,18 +373,27 @@ module.exports = function makeValidation ({arrayCheck, objCheck, compareItems}) 
                                         // To be able to compare them to know if they have identical properties at
                                         // same index, we convert to string using using JSON.stringify
                                         if(compareItems(JSON.stringify(this.data[field]), condition[this.rule.condition], JSON.stringify(this.rule.condition_value))){
-                                            retVal["message"] = `field ${this.rule.field} successfully validated.`;
-                                            retVal["status"] = "success";
                                             retVal["data"]["validation"]["error"] = false; 
+                                            this.#setMessage(`field ${this.rule.field} successfully validated.`)
+                                            this.#setStatus('success')
+                                            this.#setRetData(retVal["data"])
                                         }else{
                                             retVal["message"] = `field ${this.rule.field} failed validation.`;
                                             retVal["status"] = "error";
                                             retVal["data"]["validation"]["error"] = true;
+                                            throw {
+                                                message: retVal,
+                                                statusCode
+                                            }
                                         }
                                     }else{
                                         retVal["message"] = `field ${this.rule.field} failed validation.`;
                                         retVal["status"] = "error";
                                         retVal["data"]["validation"]["error"] = true;
+                                        throw {
+                                            message: retVal,
+                                            statusCode
+                                        }
                                     }
                                 }
                             }else if(Array.isArray(this.data[field])){
@@ -326,6 +402,10 @@ module.exports = function makeValidation ({arrayCheck, objCheck, compareItems}) 
                                         retVal["message"] = `field ${this.rule.field} failed validation.`;
                                         retVal["status"] = "error";
                                         retVal["data"]["validation"]["error"] = true;
+                                        throw {
+                                            message: retVal,
+                                            statusCode
+                                        }
                                     }else{
                                         if(this.rule.condition === 'eq' || this.rule.condition === 'neq'){
                                             // javascript object and arrrays are stored by reference,
@@ -333,59 +413,85 @@ module.exports = function makeValidation ({arrayCheck, objCheck, compareItems}) 
                                             // To be able to compare them to know if they have identical properties at
                                             // same index, we convert to string using using JSON.stringify
                                             if(compareItems(JSON.stringify(this.data[field]), condition[this.rule.condition], JSON.stringify(this.rule.condition_value))){
-                                                retVal["message"] = `field ${this.rule.field} successfully validated.`;
-                                                retVal["status"] = "success";
                                                 retVal["data"]["validation"]["error"] = false; 
+                                                this.#setMessage(`field ${this.rule.field} successfully validated.`)
+                                                this.#setStatus('success')
+                                                this.#setRetData(retVal["data"])
                                             }else{
                                                 retVal["message"] = `field ${this.rule.field} failed validation.`;
                                                 retVal["status"] = "error";
                                                 retVal["data"]["validation"]["error"] = true;
+                                                throw {
+                                                    message: retVal,
+                                                    statusCode
+                                                }
                                             }
                                         }else{
                                             retVal["message"] = `field ${this.rule.field} failed validation.`;
                                             retVal["status"] = "error";
                                             retVal["data"]["validation"]["error"] = true;
+                                            throw {
+                                                message: retVal,
+                                                statusCode
+                                            }
                                         }
                                     }
                                 }else{
                                     if(this.rule.condition === 'contains'){
                                         if(typeof this.rule.condition_value === 'string' || this.rule.condition_value === 'number'){
                                             if(arrayCheck(this.data[field], this.rule.condition_value)){
-                                                retVal["message"] = `field ${this.rule.field} successfully validated.`;
-                                                retVal["status"] = "success";
                                                 retVal["data"]["validation"]["error"] = false; 
+                                                this.#setMessage(`field ${this.rule.field} successfully validated.`)
+                                                this.#setStatus('success')
+                                                this.#setRetData(retVal["data"])
                                             }else{
                                                 retVal["message"] = `field ${this.rule.field} failed validation.`;
                                                 retVal["status"] = "error";
                                                 retVal["data"]["validation"]["error"] = true;
+                                                throw {
+                                                    message: retVal,
+                                                    statusCode
+                                                }
                                             }
                                         }else{
                                             if(this.rule.condition_value.constructor === Object){
                                                 if(this.data[field].some(element => element.constructor === Object && JSON.stringify(element) === JSON.stringify(this.rule.condition_value))){
-                                                    retVal["message"] = `field ${this.rule.field} successfully validated.`;
-                                                    retVal["status"] = "success";
                                                     retVal["data"]["validation"]["error"] = false; 
+                                                    this.#setMessage(`field ${this.rule.field} successfully validated.`)
+                                                    this.#setStatus('success')
+                                                    this.#setRetData(retVal["data"]) 
                                                 }else{
                                                     retVal["message"] = `field ${this.rule.field} failed validation.`;
                                                     retVal["status"] = "error";
                                                     retVal["data"]["validation"]["error"] = true;
+                                                    throw {
+                                                        message: retVal,
+                                                        statusCode
+                                                    }
                                                 }
                                                 
                                             }else{
                                                 retVal["message"] = `field ${this.rule.field} failed validation.`;
                                                 retVal["status"] = "error";
                                                 retVal["data"]["validation"]["error"] = true;
+                                                throw {
+                                                    message: retVal,
+                                                    statusCode
+                                                }
                                             }
                                         }
                                     }else{
                                         retVal["message"] = `field ${this.rule.field} failed validation.`;
                                         retVal["status"] = "error";
                                         retVal["data"]["validation"]["error"] = true;
+                                        throw {
+                                            message: retVal,
+                                            statusCode
+                                        }
                                     }
                                 }
                             }
                         }
-                        return retVal
                     }
                 }else{
                     throw {
@@ -436,45 +542,63 @@ module.exports = function makeValidation ({arrayCheck, objCheck, compareItems}) 
                         }
                         if(this.rule.condition !== 'contains'){
                             if(compareItems(this.validatedValue ,condition[this.rule.condition], this.rule.condition_value)){
-                                retVal["message"] = `field ${this.rule.field} successfully validated.`;
-                                retVal["status"] = "success";
-                                retVal["data"]["validation"]["error"] = false;                            
+                                retVal["data"]["validation"]["error"] = false; 
+                                this.#setMessage(`field ${this.rule.field} successfully validated.`)
+                                this.#setStatus('success')
+                                this.#setRetData(retVal["data"])                      
                             }else{
                                 retVal["message"] = `field ${this.rule.field} failed validation.`;
                                 retVal["status"] = "error";
                                 retVal["data"]["validation"]["error"] = true;
+                                throw {
+                                    message: retVal,
+                                    statusCode
+                                }
                             }
                         }else{
                             if(this.validatedValue.constructor === Object){
                                 if(objCheck(this.validatedValue, this.rule.condition_value)){
-                                    retVal["message"] = `field ${this.rule.field} successfully validated.`;
-                                    retVal["status"] = "success";
-                                    retVal["data"]["validation"]["error"] = false;  
+                                    retVal["data"]["validation"]["error"] = false; 
+                                    this.#setMessage(`field ${this.rule.field} successfully validated.`)
+                                    this.#setStatus('success')
+                                    this.#setRetData(retVal["data"]) 
                                 }else{
                                     retVal["message"] = `field ${this.rule.field} failed validation.`;
                                     retVal["status"] = "error";
                                     retVal["data"]["validation"]["error"] = true;
+                                    throw {
+                                        message: retVal,
+                                        statusCode
+                                    }
                                 }
                             }else{
                                 if(Array.isArray(this.validatedValue)){
                                     if(arrayCheck(this.validatedValue, this.rule.condition_value)){
-                                        retVal["message"] = `field ${this.rule.field} successfully validated.`;
-                                        retVal["status"] = "success";
-                                        retVal["data"]["validation"]["error"] = false;  
+                                        retVal["data"]["validation"]["error"] = false; 
+                                        this.#setMessage(`field ${this.rule.field} successfully validated.`)
+                                        this.#setStatus('success')
+                                        this.#setRetData(retVal["data"]) 
                                     }else{
                                         retVal["message"] = `field ${this.rule.field} failed validation.`;
                                         retVal["status"] = "error";
                                         retVal["data"]["validation"]["error"] = true;
+                                        throw {
+                                            message: retVal,
+                                            statusCode
+                                        }
                                     }
                                 }else{
                                     retVal["message"] = `field ${this.rule.field} failed validation. .`;
                                     retVal["status"] = "error";
                                     retVal["data"]["validation"]["error"] = true;
+                                    throw {
+                                        message: retVal,
+                                        statusCode
+                                    }
                                 }
                             }
                             
                         }
-                        return retVal 
                     }else{
                         throw {
                             message: {

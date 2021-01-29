@@ -5,4 +5,4 @@ const compareItems = require('../compareFxn')
 
 const validationFxn = makeValidation({arrayCheck, objCheck, compareItems})
 
-module.exports = { validationFxn }
+module.exports = Object.freeze({ validationFxn })
