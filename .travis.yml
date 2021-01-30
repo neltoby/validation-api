@@ -8,7 +8,6 @@ install:
   - "npm install"
 script:
   - "npm test"
-  - "npm start"
 cache: npm
 deploy:
   provider: heroku
