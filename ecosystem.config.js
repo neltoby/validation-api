@@ -11,8 +11,8 @@ module.exports = {
       ref  : 'origin/master',
       repo : 'GIT_REPOSITORY',
       path : 'DESTINATION_PATH',
-      'pre-deploy-local': 'npm install pm2',
-      'post-deploy' : 'pm2 reload ecosystem.config.js --env production',
+      'pre-deploy-local': '',
+      'post-deploy' : 'npm install && pm2 reload ecosystem.config.js --env production',
       'pre-setup': ''
     }
   }
