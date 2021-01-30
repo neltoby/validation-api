@@ -1,6 +1,6 @@
-const express = require('express')
-const bodyParser = require('body-parser')
-const cors = require('cors')
+const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const makeHttpRequest = require('./src/httpRequest')
 const { validationController } = require('./src/controller')

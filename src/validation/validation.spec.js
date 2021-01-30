@@ -1,5 +1,5 @@
-const { validationFxn } = require('./')
-const makeRequest = require('../../__test__/makeRequest')
+const { validationFxn } = require('./');
+const makeRequest = require('../../__test__/makeRequest');
 
 let req;
 beforeEach(() => {

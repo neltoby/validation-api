@@ -1,5 +1,5 @@
-const { validationController } = require('./')
-const makeFakeRequest = require('../../__test__/makeRequest')
+const { validationController } = require('./');
+const makeFakeRequest = require('../../__test__/makeRequest');
 
 let req
 

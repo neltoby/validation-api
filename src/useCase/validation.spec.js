@@ -1,5 +1,5 @@
-const { makeValidation } = require('./')
-const makeFakeRequest = require('../../__test__/makeRequest')
+const { makeValidation } = require('./');
+const makeFakeRequest = require('../../__test__/makeRequest');
 
 test('should return an object', () => {
     let req = makeFakeRequest({})
