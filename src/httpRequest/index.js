@@ -16,10 +16,8 @@ module.exports = function makeHttpRequest (controller) {
             const httpResponse = controller(httpRequest.body)
             res.set(httpResponse.headers)
             res.type('json')
-            console.log(httpResponse)
             res.status(httpResponse.statusCode).send(httpResponse.body)
         }catch(e){
-            console.log(e)
             res.status(500).send({ error: 'An unkown error occurred.' })
         }
     }
