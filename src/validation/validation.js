@@ -219,15 +219,15 @@ module.exports = function makeValidation ({arrayCheck, objCheck, compareItems}) 
                 return this.retData
             }
 
-            #setMessage(message){
+            #messageSet(message){
                 this.message = message
             }
 
-            #setStatus(status){
+            #statusSet(status){
                 this.status = status
             }
 
-            #setRetData(data){
+            #retDataSet(data){
                 this.retData = data
             }
 
@@ -271,9 +271,9 @@ module.exports = function makeValidation ({arrayCheck, objCheck, compareItems}) 
                     if(this.rule.condition !== 'contains'){
                         if(compareItems(this.data.charAt(field), condition[this.rule.condition], this.rule.condition_value)){
                             retVal["data"]["validation"]["error"] = false; 
-                            this.#setMessage(`field ${this.rule.field} successfully validated.`)
-                            this.#setStatus('success')
-                            this.#setRetData(retVal["data"])
+                            this.#messageSet(`field ${this.rule.field} successfully validated.`)
+                            this.#statusSet('success')
+                            this.#retDataSet(retVal["data"])
                         }else{
                             retVal["message"] = `field ${this.rule.field} failed validation.`;
                             retVal["status"] = "error";
@@ -335,9 +335,9 @@ module.exports = function makeValidation ({arrayCheck, objCheck, compareItems}) 
                                 if(this.rule.condition === 'eq' || this.rule.condition === 'neq'){         
                                     if(compareItems(this.data[field], condition[this.rule.condition], this.rule.condition_value)){
                                         retVal["data"]["validation"]["error"] = false; 
-                                        this.#setMessage(`field ${this.rule.field} successfully validated.`)
-                                        this.#setStatus('success')
-                                        this.#setRetData(retVal["data"])
+                                        this.#messageSet(`field ${this.rule.field} successfully validated.`)
+                                        this.#statusSet('success')
+                                        this.#retDataSet(retVal["data"])
                                     }else{
                                         retVal["message"] = `field ${this.rule.field} failed validation.`;
                                         retVal["status"] = "error";
@@ -352,9 +352,9 @@ module.exports = function makeValidation ({arrayCheck, objCheck, compareItems}) 
                                     || typeof this.data[field] === 'number' && typeof this.rule.condition_value === 'number'){
                                         if(compareItems(this.data[field], condition[this.rule.condition], this.rule.condition_value)){
                                             retVal["data"]["validation"]["error"] = false; 
-                                            this.#setMessage(`field ${this.rule.field} successfully validated.`)
-                                            this.#setStatus('success')
-                                            this.#setRetData(retVal["data"])
+                                            this.#messageSet(`field ${this.rule.field} successfully validated.`)
+                                            this.#statusSet('success')
+                                            this.#retDataSet(retVal["data"])
                                         }else{
                                             retVal["message"] = `field ${this.rule.field} failed validation.`;
                                             retVal["status"] = "error";
@@ -381,9 +381,9 @@ module.exports = function makeValidation ({arrayCheck, objCheck, compareItems}) 
                                 }
                                 if(dat_field_value.includes(this.rule.condition_value)){
                                     retVal["data"]["validation"]["error"] = false; 
-                                    this.#setMessage(`field ${this.rule.field} successfully validated.`)
-                                    this.#setStatus('success')
-                                    this.#setRetData(retVal["data"])
+                                    this.#messageSet(`field ${this.rule.field} successfully validated.`)
+                                    this.#statusSet('success')
+                                    this.#retDataSet(retVal["data"])
                                 }else{
                                     retVal["message"] = `field ${this.rule.field} failed validation.`;
                                     retVal["status"] = "error";
@@ -400,9 +400,9 @@ module.exports = function makeValidation ({arrayCheck, objCheck, compareItems}) 
                                     if(typeof this.rule.condition_value === 'string'){
                                         if(objCheck(this.data[field], this.rule.condition_value)){
                                             retVal["data"]["validation"]["error"] = false; 
-                                            this.#setMessage(`field ${this.rule.field} successfully validated.`)
-                                            this.#setStatus('success')
-                                            this.#setRetData(retVal["data"])
+                                            this.#messageSet(`field ${this.rule.field} successfully validated.`)
+                                            this.#statusSet('success')
+                                            this.#retDataSet(retVal["data"])
                                         }else{
                                             retVal["message"] = `field ${this.rule.field} failed validation.`;
                                             retVal["status"] = "error";
@@ -429,9 +429,9 @@ module.exports = function makeValidation ({arrayCheck, objCheck, compareItems}) 
                                         // same index, we convert to string using using JSON.stringify
                                         if(compareItems(JSON.stringify(this.data[field]), condition[this.rule.condition], JSON.stringify(this.rule.condition_value))){
                                             retVal["data"]["validation"]["error"] = false; 
-                                            this.#setMessage(`field ${this.rule.field} successfully validated.`)
-                                            this.#setStatus('success')
-                                            this.#setRetData(retVal["data"])
+                                            this.#messageSet(`field ${this.rule.field} successfully validated.`)
+                                            this.#statusSet('success')
+                                            this.#retDataSet(retVal["data"])
                                         }else{
                                             retVal["message"] = `field ${this.rule.field} failed validation.`;
                                             retVal["status"] = "error";
@@ -469,9 +469,9 @@ module.exports = function makeValidation ({arrayCheck, objCheck, compareItems}) 
                                             // same index, we convert to string using using JSON.stringify
                                             if(compareItems(JSON.stringify(this.data[field]), condition[this.rule.condition], JSON.stringify(this.rule.condition_value))){
                                                 retVal["data"]["validation"]["error"] = false; 
-                                                this.#setMessage(`field ${this.rule.field} successfully validated.`)
-                                                this.#setStatus('success')
-                                                this.#setRetData(retVal["data"])
+                                                this.#messageSet(`field ${this.rule.field} successfully validated.`)
+                                                this.#statusSet('success')
+                                                this.#retDataSet(retVal["data"])
                                             }else{
                                                 retVal["message"] = `field ${this.rule.field} failed validation.`;
                                                 retVal["status"] = "error";
@@ -496,9 +496,9 @@ module.exports = function makeValidation ({arrayCheck, objCheck, compareItems}) 
                                         if(typeof this.rule.condition_value === 'string' || this.rule.condition_value === 'number'){
                                             if(arrayCheck(this.data[field], this.rule.condition_value)){
                                                 retVal["data"]["validation"]["error"] = false; 
-                                                this.#setMessage(`field ${this.rule.field} successfully validated.`)
-                                                this.#setStatus('success')
-                                                this.#setRetData(retVal["data"])
+                                                this.#messageSet(`field ${this.rule.field} successfully validated.`)
+                                                this.#statusSet('success')
+                                                this.#retDataSet(retVal["data"])
                                             }else{
                                                 retVal["message"] = `field ${this.rule.field} failed validation.`;
                                                 retVal["status"] = "error";
@@ -512,9 +512,9 @@ module.exports = function makeValidation ({arrayCheck, objCheck, compareItems}) 
                                             if(this.rule.condition_value.constructor === Object){
                                                 if(this.data[field].some(element => element.constructor === Object && JSON.stringify(element) === JSON.stringify(this.rule.condition_value))){
                                                     retVal["data"]["validation"]["error"] = false; 
-                                                    this.#setMessage(`field ${this.rule.field} successfully validated.`)
-                                                    this.#setStatus('success')
-                                                    this.#setRetData(retVal["data"]) 
+                                                    this.#messageSet(`field ${this.rule.field} successfully validated.`)
+                                                    this.#statusSet('success')
+                                                    this.#retDataSet(retVal["data"]) 
                                                 }else{
                                                     retVal["message"] = `field ${this.rule.field} failed validation.`;
                                                     retVal["status"] = "error";
@@ -598,9 +598,9 @@ module.exports = function makeValidation ({arrayCheck, objCheck, compareItems}) 
                         if(this.rule.condition !== 'contains'){
                             if(compareItems(this.validatedValue ,condition[this.rule.condition], this.rule.condition_value)){
                                 retVal["data"]["validation"]["error"] = false; 
-                                this.#setMessage(`field ${this.rule.field} successfully validated.`)
-                                this.#setStatus('success')
-                                this.#setRetData(retVal["data"])                      
+                                this.#messageSet(`field ${this.rule.field} successfully validated.`)
+                                this.#statusSet('success')
+                                this.#retDataSet(retVal["data"])                      
                             }else{
                                 retVal["message"] = `field ${this.rule.field} failed validation.`;
                                 retVal["status"] = "error";
@@ -614,9 +614,9 @@ module.exports = function makeValidation ({arrayCheck, objCheck, compareItems}) 
                             if(this.validatedValue.constructor === Object){
                                 if(objCheck(this.validatedValue, this.rule.condition_value)){
                                     retVal["data"]["validation"]["error"] = false; 
-                                    this.#setMessage(`field ${this.rule.field} successfully validated.`)
-                                    this.#setStatus('success')
-                                    this.#setRetData(retVal["data"]) 
+                                    this.#messageSet(`field ${this.rule.field} successfully validated.`)
+                                    this.#statusSet('success')
+                                    this.#retDataSet(retVal["data"]) 
                                 }else{
                                     retVal["message"] = `field ${this.rule.field} failed validation.`;
                                     retVal["status"] = "error";
@@ -630,9 +630,9 @@ module.exports = function makeValidation ({arrayCheck, objCheck, compareItems}) 
                                 if(Array.isArray(this.validatedValue)){
                                     if(arrayCheck(this.validatedValue, this.rule.condition_value)){
                                         retVal["data"]["validation"]["error"] = false; 
-                                        this.#setMessage(`field ${this.rule.field} successfully validated.`)
-                                        this.#setStatus('success')
-                                        this.#setRetData(retVal["data"]) 
+                                        this.#messageSet(`field ${this.rule.field} successfully validated.`)
+                                        this.#statusSet('success')
+                                        this.#retDataSet(retVal["data"]) 
                                     }else{
                                         retVal["message"] = `field ${this.rule.field} failed validation.`;
                                         retVal["status"] = "error";
