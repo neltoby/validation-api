@@ -3,10 +3,12 @@ node_js:
   - 14
 before_install:
   - "npm install jest-cli --global"
+  - "npm install pm2 -g"
 install:
   - "npm install"
 script:
   - "npm test"
+  - "npm start"
 cache: npm
 deploy:
   provider: heroku
