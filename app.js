@@ -35,6 +35,10 @@ app.get('/', cors(), (req, res) => {
 })
 app.post('/validate-rule', cors(), makeHttpRequest(validationController))
 
+app.use('/*', (req, res) => {
+    res.send('There is no page here')
+})
+
 
 module.exports = app
 

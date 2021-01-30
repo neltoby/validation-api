@@ -87,42 +87,97 @@ module.exports = function makeValidation ({arrayCheck, objCheck, compareItems}) 
                     }
                 }
                 
-                if(!rule.field.trim()){
+                if(!rule.field){
                     throw {
                         message: {
-                            message: "rule.field is required",
+                            message: "rule.field is required.",
                             status: "error",
                             data: null
                         },
                         statusCode
                     }
-                }
-                if(!rule.condition.trim()){
-                    throw {
-                        message: {
-                            message: "rule.condition is required",
-                            status: "error",
-                            data: null
-                        },
-                        statusCode
-                    }
-                }
-                if(typeof rule.condition_value === 'string'){
-                    if(!rule.condition_value.trim()){
+                }else{
+                    if(typeof rule.field === 'string'){
+                        if(!rule.field.trim()){
+                            throw {
+                                message: {
+                                    message: "rule.field is required.",
+                                    status: "error",
+                                    data: null
+                                },
+                                statusCode
+                            }
+                        }
+                    }else{
                         throw {
                             message: {
-                                message: "rule.condition_value is required",
+                                message: "rule.field is requires string.",
                                 status: "error",
                                 data: null
                             },
                             statusCode
                         }
                     }
+                }
+                if(!rule.condition){
+                    throw {
+                        message: {
+                            message: "rule.condition is required.",
+                            status: "error",
+                            data: null
+                        },
+                        statusCode
+                    }
+                }else{
+                    if(typeof rule.condition === 'string'){
+                        if(!rule.condition.trim()){
+                            throw {
+                                message: {
+                                    message: "rule.field is required.",
+                                    status: "error",
+                                    data: null
+                                },
+                                statusCode
+                            }
+                        }
+                    }else{
+                        throw {
+                            message: {
+                                message: "rule.condition requires string.",
+                                status: "error",
+                                data: null
+                            },
+                            statusCode
+                        }
+                    }
+                }
+                if(typeof rule.condition_value === 'string'){
+                    if(!rule.condition_value){
+                        throw {
+                            message: {
+                                message: "rule.condition_value is required.",
+                                status: "error",
+                                data: null
+                            },
+                            statusCode
+                        }
+                    }else{
+                        if(!rule.condition_value.trim()){
+                            throw {
+                                message: {
+                                    message: "rule.condition_value is required.",
+                                    status: "error",
+                                    data: null
+                                },
+                                statusCode
+                            }
+                        }
+                    }
                 }else{
                     if(!rule.condition_value){
                         throw {
                             message: {
-                                message: "rule.condition_value is required",
+                                message: "rule.condition_value is required.",
                                 status: "error",
                                 data: null
                             },

@@ -1,0 +1,14 @@
+language: node_js
+node_js:
+  - 14
+before_install:
+  - "npm install jest-cli --global"
+install:
+  - "npm install"
+script:
+  - "npm test"
+cache: npm
+deploy:
+  provider: heroku
+    api_key:
+    secure: Y2HzKphb64t4/hC6BsfdioNBbTbZtOZnfbweFwBibrVXfj0LUAHM9jjVOX1xT8zuUTrmoGK5ES3g9zzh+m6/lYq+SdAixy1CQpZ3QCMlHvjlZPUf5VazsXACslcrFjIH16NMVU21BzwIK1WvgVK+6ZJ0GrbE3Ydmkgk94gYFzTXwlpx67ksM7brMVVQVGTZLqkN6vJYceVZ/hSUHs2OtIE4/GgG9lL1BV0GTQhQwCJQ0LwRwRoq9p0uYmeVibqICnL0VFlfvBFQ+lsl9TcebMMm6J+DfZwHmKlyK7ccDg6O45EM621oOpSzuHUTGLGgq7QFJ7+cnLuJdunFRpS+IzvuuepQ9EDSIvC/7vidwQL5GEKy3xa5CwApoCTgI8yCq+teaNGs5VeN8h5cKNVa/qv8zw40oYDUPnFmyxF7GCXufIIjHlQ9JmQ//Dw+7qin1oai3AbwBEsyr1p00c4n8C8tTZhVHKy/XxlAcoY0JrdUpxo5OBceeCXwUWYTchUfMInK+JHz9MaezWCTHoPgwWjg6A5lJBNznztsF4NJoPQ1De9y/fcJ0UKx2hqUwX2vKvIQxO0/NFBuiyYsXnzWNbSmFPBZOQyy+Lwi16RJnM28nqQRoqJIMOuZB1EccZSeep+KITHRXYQJm/FHV+kSKEdMKcfwqMrtb/L0XLzIYhYI=
