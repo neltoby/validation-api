@@ -2,11 +2,11 @@ language: node_js
 node_js:
   - 14
 before_install:
-  - "npm install jest-cli --global"
+  - npm install jest-cli --global
 install:
-  - "npm install"
+  - npm install
 script:
-  - "npm test"
+  - npm test
 cache: npm
 deploy:
   provider: heroku
